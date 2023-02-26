@@ -31,17 +31,7 @@ SECRET_KEY = 'django-insecure-s47d=a5+w=a2_%znogcq%-8@@0n4b!8)$m)^8c$k3y04@m_tdc
 PRODUCTION = os.getenv('DATABASE_URL') is not None
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not PRODUCTION
-
-APP_NAME = os.getenv('APP_NAME', '')
-
-ALLOWED_HOSTS = [f'{APP_NAME}.up.railway.app']
-
-if not PRODUCTION:
-    ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '[::1]']
-
-# For CSRF origin check verification
-CSRF_TRUSTED_ORIGINS = [f'{APP_NAME}.up.railway.app']
+DEBUG = True
 
 # Application definition
 
@@ -53,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'study_tracker',
 ]
 
 MIDDLEWARE = [
