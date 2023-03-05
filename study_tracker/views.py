@@ -29,9 +29,11 @@ def add_assignment(request):
     return render(request, 'add_assignment.html', context)
 
 def show_xml(request):
-    data = Assignment.objects.all()
-    return HttpResponse(serializers.serialize('xml', data), content_type='application/xml')
+    assignments = Assignment.objects.all()
+    xml = serializers.serialize('xml', assignments)
+    return HttpResponse(xml, content_type='text/xml')
 
 def show_json(request):
-    data = Assignment.objects.all()
-    return HttpResponse(serializers.serialize('json', data), content_type='application/json')
+    assignments = Assignment.objects.all()
+    json = serializers.serialize('json', assignments)
+    return HttpResponse(json, content_type='application/json')
