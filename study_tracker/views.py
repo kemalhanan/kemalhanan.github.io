@@ -22,7 +22,8 @@ def show_tracker(request):
     context = {
         'list_of_assignments': assignments,
         'name': request.user.username,
-        'last_login': request.COOKIES.get('last_login')
+        'last_login': request.COOKIES.get('last_login'),
+        'total': len(assignments),
     }
     return render(request, 'tracker.html', context)
 
