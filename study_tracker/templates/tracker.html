@@ -1,36 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h5>
 
-<table>
-    <tr>
-        <th>Nama</th>
-        <th>Subyek</th>
-        <th>Progres</th>
-        <th>Tanggal</th>
-        <th>Deskripsi</th>
-    </tr>
+<title>Study Tracker</title>
+
+<h4>Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Subyek</th>
+            <th>Progres</th>
+            <th>Tanggal</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
     {% for assignments in list_of_assignments %}
-    <tr>
-        <td>{{assignments.name}}</td>
-        <td>{{assignments.subject}}</td>
-        <td>{{assignments.progress}}</td>
-        <td>{{assignments.date}}</td>
-        <td>{{assignments.description}}</td>
-        <td>
-            <a href="{% url 'study_tracker:modify_assignment' assignments.pk %}">
-                <button>
-                    Ubah
-                </button>
-            </a>
-            <a href="{% url 'study_tracker:delete_assignment' assignments.pk %}">
-                <button>
-                    Hapus
-                </button>
-            </a>
-        </td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>{{assignments.name}}</td>
+            <td>{{assignments.subject}}</td>
+            <td>{{assignments.progress}}</td>
+            <td>{{assignments.date}}</td>
+            <td>{{assignments.description}}</td>
+            <td>
+                <a href="{% url 'study_tracker:modify_assignment' assignments.pk %}">
+                    <button type="button" class="btn btn-primary">
+                        Ubah
+                    </button>
+                </a>
+                <a href="{% url 'study_tracker:delete_assignment' assignments.pk %}">
+                    <button type="button" class="btn btn-danger">
+                        Hapus
+                    </button>
+                </a>
+            </td>
+        </tr>
+    </tbody>
     {% endfor %}
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
 </table>
@@ -41,13 +48,13 @@
 
 <br>
 <a href="{% url 'study_tracker:add_assignment' %}">
-    <button>
+    <button type="button" class="btn btn-primary">
         Assignment Baru
     </button>
 </a>
 
 <a href="{% url 'study_tracker:logout' %}">
-    <button>
+    <button type="button" class="btn btn-danger">
         Logout
     </button>
 </a>
