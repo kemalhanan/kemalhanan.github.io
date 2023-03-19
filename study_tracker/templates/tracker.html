@@ -18,6 +18,18 @@
         <td>{{assignments.progress}}</td>
         <td>{{assignments.date}}</td>
         <td>{{assignments.description}}</td>
+        <td>
+            <a href="{% url 'study_tracker:modify_assignment' assignments.pk %}">
+                <button>
+                    Ubah
+                </button>
+            </a>
+            <a href="{% url 'study_tracker:delete_assignment' assignments.pk %}">
+                <button>
+                    Hapus
+                </button>
+            </a>
+        </td>
     </tr>
     {% endfor %}
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}

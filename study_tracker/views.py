@@ -23,7 +23,7 @@ def show_tracker(request):
         'list_of_assignments': assignments,
         'name': request.user.username,
         'last_login': request.COOKIES.get('last_login'),
-        'total': len(assignments),
+        'total': Assignment.objects.filter(progress__lt=100).count(),
     }
     return render(request, 'tracker.html', context)
 
@@ -83,3 +83,27 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('study_tracker:login'))
     response.delete_cookie('last_login')
     return redirect('study_tracker:login')
+
+def modify_assignment(request, id):
+    # Get data berdasarkan ID
+    assignment = Assignment.objects.get(pk = id)
+
+    # Set instance pada form dengan data dari assignment
+    form = AssignmentForm(request.POST or None, instance=assignment)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('study_tracker:show_tracker'))
+
+    context = {'form': form}
+    return render(request, "modify_assignment.html", context)
+
+def delete_assignment(request, id):
+    # Get data berdasarkan ID
+    assignment = Assignment.objects.get(pk = id)
+    # Hapus data
+    assignment.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('study_tracker:show_tracker'))
+ 
