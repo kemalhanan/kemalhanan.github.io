@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required(login_url='study_tracker:login')
@@ -106,4 +108,24 @@ def delete_assignment(request, id):
     assignment.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('study_tracker:show_tracker'))
- 
+
+@csrf_exempt
+def add_assignment_ajax(request):
+    form = AssignmentForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        data = Assignment.objects.last()
+
+        result = {
+            'id': data.id,
+            'name': data.name,
+            'subject': data.subject,
+            'progress': data.progress,
+            'date': data.date,
+            'description': data.description,
+        }
+        return JsonResponse(result)
+    
+    context = {'form': form}
+    return render(request, "add_assignment.html", context)

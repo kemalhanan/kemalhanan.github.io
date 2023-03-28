@@ -1,62 +1,127 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <title>Study Tracker</title>
 
-<h4>Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h4>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">{{request.user.username}}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'study_tracker:logout' %}">Log Out</a>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+          Tambah Assignment
+        </button>
+      </div>
+    </div>
+  </nav>  
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nama</th>
-            <th>Subyek</th>
-            <th>Progres</th>
-            <th>Tanggal</th>
-            <th>Deskripsi</th>
-        </tr>
-    </thead>
-    {% for assignments in list_of_assignments %}
-    <tbody>
-        <tr>
-            <td>{{assignments.name}}</td>
-            <td>{{assignments.subject}}</td>
-            <td>{{assignments.progress}}</td>
-            <td>{{assignments.date}}</td>
-            <td>{{assignments.description}}</td>
-            <td>
-                <a href="{% url 'study_tracker:modify_assignment' assignments.pk %}">
-                    <button type="button" class="btn btn-primary">
-                        Ubah
-                    </button>
-                </a>
-                <a href="{% url 'study_tracker:delete_assignment' assignments.pk %}">
-                    <button type="button" class="btn btn-danger">
-                        Hapus
-                    </button>
-                </a>
-            </td>
-        </tr>
-    </tbody>
-    {% endfor %}
-    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-</table>
+  <h4>Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h4>
 
-</table>
+<script>
+    $(document).ready(function(){
+        $.get("/tracker/json/", function(data) {
+            for (i=0; i<data.length; i++){
+                $('#tracker').append(`
+                <div id="${data[i].id}--task" class="col-md-6 col-lg-3 mb-3">
+                    <div class="card d-flex">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${data[i].fields.name}</h5>
+                            <p class="card-text date">${data[i].fields.date}</p>
+                            <p class="card-text">${data[i].fields.subject}</p>
+                            <p class="card-text">${data[i].fields.progress}</p>
+                            <p class="card-text">${data[i].fields.description}</p>
+                            <div class="mt-auto">
+                                <a href="/tracker/delete/${data[i].pk}" class="btn btn-primary delete mb-2">Hapus</a>
+                                <a href="/tracker/modify/${data[i].pk}" class="btn btn-secondary mb-2">Ubah</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `)
+            }
+        });
+  
+        $("#submit_btn").click(function(){
+            $.post("/tracker/create-ajax/", {
+                name: $("#name").val(),
+                subject: $("#subject").val(),
+                progress: $("#progress").val(),
+                description: $("#description").val()
+            },
+            function(result, status){
+                if (status == 'success'){
+                    $("#tracker").append(`
+                    <div id="${result.id}--task" class="col-md-6 col-lg-3 mb-3">
+                        <div class="card d-flex">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${result.name}</h5>
+                                <p class="card-text date">${result.date}</p>
+                                <p class="card-text">${result.subject}</p>
+                                <p class="card-text">${result.progress}</p>
+                                <p class="card-text">${result.description}</p>
+                                <div class="mt-auto">
+                                    <a href="/tracker/delete/${result.id}" class="btn btn-primary delete mb-2">Hapus</a>
+                                    <a href="/tracker/modify/${result.id}" class="btn btn-secondary mb-2">Ubah</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `);
+                $('#name').val('')
+                $('#date').val('')
+                $('#progress').val('')
+                $('#description').val('')
+                }
+            })
+        })
+    })
+  </script>
+  
+    <body>
+      <h3 class="text-center">Data Assignment</h3>
+  
+      <!-- Modal -->
+      <div class="modal" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h1 class="modal-title fs-5" id="createModalLabel">Tambah Assignment</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+              </div>
+              <div class="modal-body">
+              {% csrf_token %}
+              <label for="name" class="form-label">Judul Assignment:</label><br>
+              <input type="text" id="name" class="form-control" name="name" placeholder="Tutorial"><br>
+              <label for="subject" class="form-label">Nama Matkul:</label>
+              <input type="text" id="subject" class="form-control" name="subject" placeholder="PBP"><br>
+              <label for="progress" class="form-label">Progress:</label><br>
+              <input type="number" id="progress" class="form-control" name="progress" placeholder="0 - 100"><br>
+              <label for="description" class="form-label">Deskripsi transaksi:</label><br>
+              <input type="text" id="description" class="form-control" name="description" placeholder="Tugas untuk Bulan Mei"><br>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button id="submit_btn" type="button" class="btn btn-primary create" id="add-task" data-bs-dismiss="modal">Add</button>
+              </div>
+          </div>
+          </div>
+      </div>
+  </body>
+
+<div class="row m-2" id="tracker"></div>
 
 <h5>Sesi terakhir login: {{ last_login }}</h5>
-
-<br>
-<a href="{% url 'study_tracker:add_assignment' %}">
-    <button type="button" class="btn btn-primary">
-        Assignment Baru
-    </button>
-</a>
-
-<a href="{% url 'study_tracker:logout' %}">
-    <button type="button" class="btn btn-danger">
-        Logout
-    </button>
-</a>
-
+  
 {% endblock content %}

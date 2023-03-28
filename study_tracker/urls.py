@@ -8,6 +8,7 @@ from study_tracker.views import login_user
 from study_tracker.views import logout_user
 from study_tracker.views import modify_assignment
 from study_tracker.views import delete_assignment
+from study_tracker.views import add_assignment_ajax
 
 app_name = 'study_tracker'
 
@@ -21,4 +22,5 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('modify/<int:id>', modify_assignment, name='modify_assignment'),
     path('delete/<int:id>', delete_assignment, name='delete_assignment'),
+    path('create-ajax/', add_assignment_ajax, name='add_assignment_ajax'),
     ]
