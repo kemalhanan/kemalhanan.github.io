@@ -27,8 +27,6 @@
     </div>
   </nav>  
 
-  <h4>Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h4>
-
 <script>
     $(document).ready(function(){
         $.get("/tracker/json/", function(data) {
@@ -90,6 +88,7 @@
   </script>
   
     <body>
+      <h4 class="text-center">Hai {{name}}, kamu memiliki {{total}} tugas yang harus dikerjakan!</h4>
       <h3 class="text-center">Data Assignment</h3>
   
       <!-- Modal -->
@@ -108,7 +107,7 @@
               <input type="text" id="subject" class="form-control" name="subject" placeholder="PBP"><br>
               <label for="progress" class="form-label">Progress:</label><br>
               <input type="number" id="progress" class="form-control" name="progress" placeholder="0 - 100"><br>
-              <label for="description" class="form-label">Deskripsi transaksi:</label><br>
+              <label for="description" class="form-label">Deskripsi Tugas:</label><br>
               <input type="text" id="description" class="form-control" name="description" placeholder="Tugas untuk Bulan Mei"><br>
               </div>
               <div class="modal-footer">
@@ -122,6 +121,12 @@
 
 <div class="row m-2" id="tracker"></div>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+<h7>Sesi terakhir login: {{ last_login }}</h7>
+
+<style>
+  .container {
+    border-color: rgb(255, 255, 255);
+  }
+</style>
   
 {% endblock content %}
