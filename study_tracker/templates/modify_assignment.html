@@ -6,19 +6,36 @@
 
 <title>Ubah Data Tugas</title>
 
-<h1>Ubah Data Tugas</h1>
+<div class="modify">
+    <h1>Ubah Data Tugas</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Ubah"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 
-<form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Ubah"/>
-            </td>
-        </tr>
-    </table>
-</form>
+<style>
+    .modify {
+        width: 700px;
+        margin-top: -225px;
+        margin-left: -350px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        padding: 20px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        background-color: #ffffff;
+        opacity: 0.9;
+    }
+</style>
 
 {% endblock %}
