@@ -8,7 +8,7 @@
 
 <div class = "login">
 
-    <h1>Login</h1>
+    <h1 class="text-center">Login</h1>
 
     <form method="POST" action="">
         {% csrf_token %}
@@ -41,5 +41,15 @@
     Belum mempunyai akun? <a href="{% url 'study_tracker:register' %}">Buat Akun</a>
 
 </div>
+
+<style>
+    .login {
+        width: 300px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+</style>
 
 {% endblock content %}
